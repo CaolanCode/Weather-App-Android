@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="day_card_title_padding">5dp</dimen>
+    <dimen name="day_card_width">100dp</dimen>
+    <dimen name="day_card_temp_padding_horizontal">12dp</dimen>
+    <dimen name="day_card_temp_padding_vertical">5dp</dimen>
+    <dimen name="day_card_temp_font_size">12sp</dimen>
+    <dimen name="map_height">400dp</dimen>
+    <dimen name="title_met_font_size">25sp</dimen>
+    <dimen name="title_eireann_font_size">20sp</dimen>
+    <dimen name="home_location_padding">10dp</dimen>
+    <dimen name="home_location_font_size">13sp</dimen>
+</resources>

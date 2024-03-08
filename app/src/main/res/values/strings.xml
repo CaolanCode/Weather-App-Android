@@ -1,3 +1,14 @@
 <resources>
+    // main activity
     <string name="app_name">Weather App</string>
+    <string name="title">Weather</string>
+    <string name="weather_icon">weather icon</string>
+    <string name="title_met">MET</string>
+    <string name="title_eireann">éireann</string>
+    <string name="header_search_description">Search location icon</string>
+    <string name="header_menu_description">Menu icon</string>
+
+
+    // day activity
+    <string name="day_title">DETAILED FORECAST</string>
 </resources>
