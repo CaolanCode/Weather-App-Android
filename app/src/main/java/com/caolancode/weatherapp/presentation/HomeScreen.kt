@@ -10,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
@@ -22,7 +23,7 @@ import com.caolancode.weatherapp.presentation.ui.theme.White
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    navHostController: NavHostController
+    onNavigateToDayScreen: () -> Unit
 ) {
     val tempIcon = "https://cdn.weatherapi.com/weather/64x64/day/143.png"
     val day = "Mon"
@@ -43,7 +44,9 @@ fun HomeScreen(
             fontSize = locationFontSize
         )
         Row(
-            modifier = modifier.fillMaxWidth(),
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(top = dimensionResource(id = R.dimen.day_card_top_padding)),
             horizontalArrangement = Arrangement.SpaceAround
         ) {
             DayCard(
@@ -51,21 +54,21 @@ fun HomeScreen(
                 day,
                 highTemp,
                 lowTemp,
-                navHostController
+                onNavigateToDayScreen
             )
             DayCard(
                 tempIcon,
                 day,
                 highTemp,
                 lowTemp,
-                navHostController
+                onNavigateToDayScreen
             )
             DayCard(
                 tempIcon,
                 day,
                 highTemp,
                 lowTemp,
-                navHostController
+                onNavigateToDayScreen
             )
         }
     }

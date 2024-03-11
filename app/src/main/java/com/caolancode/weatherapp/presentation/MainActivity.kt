@@ -19,17 +19,13 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             navController = rememberNavController()
-            SetupNavGraph(navController = navController)
 
             Scaffold(
                 topBar = {
                     Header()
                 }
             ) { innerPadding ->
-                HomeScreen(
-                    Modifier.padding(innerPadding),
-                    navController
-                )
+                SetupNavGraph(modifier = Modifier.padding(innerPadding), navController)
             }
         }
     }

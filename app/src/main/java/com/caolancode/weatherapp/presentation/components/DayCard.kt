@@ -34,16 +34,14 @@ fun DayCard(
     day: String,
     highTemp: String,
     lowTemp: String,
-    navHostController: NavHostController
+    onNavigateToDayScreen: () -> Unit
 ) {
     val cardWidth = dimensionResource(id = R.dimen.day_card_width)
     val tempPadding = dimensionResource(id = R.dimen.day_card_temp_padding_horizontal)
     Card(
         modifier = Modifier
             .width(cardWidth)
-            .clickable {
-                navHostController.navigate(route = Destination.Day.route)
-            },
+            .clickable { onNavigateToDayScreen() },
         colors = CardDefaults.cardColors(
             containerColor = Gray
         )
@@ -88,21 +86,5 @@ fun DayCardTemp(value: String) {
         textAlign = TextAlign.Center,
         color = Navy,
         fontSize = tempFontSize
-    )
-}
-
-@Preview
-@Composable
-fun DayCardPreview() {
-    val tempIcon = "https://cdn.weatherapi.com/weather/64x64/day/143.png"
-    val day = "Mon"
-    val highTemp = "8ºC"
-    val lowTemp = "5ºC"
-    DayCard(
-        tempIcon,
-        day,
-        highTemp,
-        lowTemp,
-        navHostController = rememberNavController()
     )
 }

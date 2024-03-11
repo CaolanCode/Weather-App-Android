@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    // Home Screen
     <dimen name="day_card_title_padding">5dp</dimen>
     <dimen name="day_card_width">100dp</dimen>
     <dimen name="day_card_temp_padding_horizontal">12dp</dimen>
@@ -10,4 +12,21 @@
     <dimen name="title_eireann_font_size">20sp</dimen>
     <dimen name="home_location_padding">10dp</dimen>
     <dimen name="home_location_font_size">13sp</dimen>
+    <dimen name="day_card_top_padding">15dp</dimen>
+
+    // Day Screen
+    <dimen name="day_title_padding">5dp</dimen>
+    <dimen name="day_title_font_size">16sp</dimen>
+    <dimen name="day_info_icon_size">30dp</dimen>
+    <dimen name="day_location_font_size">12sp</dimen>
+    <dimen name="day_location_padding_vertical">5dp</dimen>
+    <dimen name="day_location_padding_horizontal">3dp</dimen>
+    <dimen name="medium_label_height">50dp</dimen>
+    <dimen name="large_label_height">100dp</dimen>
+    <dimen name="small_label_height">30dp</dimen>
+    <dimen name="label_width">110dp</dimen>
+    <dimen name="divider_thickness">2dp</dimen>
+    <dimen name="vertical_label_padding">5dp</dimen>
+    <dimen name="horizontal_label_padding">3dp</dimen>
+
 </resources>

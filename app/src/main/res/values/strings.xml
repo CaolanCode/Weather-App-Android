@@ -1,5 +1,5 @@
 <resources>
-    // main activity
+    // home screen
     <string name="app_name">Weather App</string>
     <string name="title">Weather</string>
     <string name="weather_icon">weather icon</string>
@@ -9,6 +9,25 @@
     <string name="header_menu_description">Menu icon</string>
 
 
-    // day activity
+    // day screen
     <string name="day_title">DETAILED FORECAST</string>
+    <string name="day_title_information">forecast information icon</string>
+    <string name="time_label">Time</string>
+    <string name="sun_label">Sun</string>
+    <string name="weather_label">Weather</string>
+    <string name="precip_label">Precipitation</string>
+    <string name="chance_label">Change Of</string>
+    <string name="wind_label">Wind</string>
+    <string name="wind_speed_label">Km/h</string>
+    <string name="gust_label">Gust</string>
+    <string name="temp_label">Temperature</string>
+    <string name="temp_feel_label">Feels like</string>
+    <string name="mm_hour_label">Up to the hour</string>
+    <string name="humidity_label">Humidity</string>
+    <string name="dew_label">Dew Point</string>
+    <string name="pressure_label">hPa</string>
+    <string name="sunrise_icon">Sunrise icon</string>
+    <string name="hour_icon">hour icon</string>
+    <string name="rain_icon">rain icon</string>
+
 </resources>
