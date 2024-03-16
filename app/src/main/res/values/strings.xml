@@ -16,7 +16,7 @@
     <string name="sun_label">Sun</string>
     <string name="weather_label">Weather</string>
     <string name="precip_label">Precipitation</string>
-    <string name="chance_label">Change Of</string>
+    <string name="chance_label">Chance Of</string>
     <string name="wind_label">Wind</string>
     <string name="wind_speed_label">Km/h</string>
     <string name="gust_label">Gust</string>
@@ -29,5 +29,9 @@
     <string name="sunrise_icon">Sunrise icon</string>
     <string name="hour_icon">hour icon</string>
     <string name="rain_icon">rain icon</string>
+    <string name="prev_button">Prev</string>
+    <string name="prev_icon_description">Move to previous day icon</string>
+    <string name="next_button">Next</string>
+    <string name="next_icon_description">Move to next day icon</string>
 
 </resources>

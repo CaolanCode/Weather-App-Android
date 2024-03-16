@@ -1,5 +1,6 @@
 package com.caolancode.weatherapp.presentation.components
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -12,6 +13,9 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
@@ -25,34 +29,45 @@ import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.caolancode.weatherapp.R
 import com.caolancode.weatherapp.data.Destination
+import com.caolancode.weatherapp.data.WeatherData
+import com.caolancode.weatherapp.domain.WeatherViewModel
 import com.caolancode.weatherapp.presentation.ui.theme.Gray
 import com.caolancode.weatherapp.presentation.ui.theme.Navy
 
 @Composable
 fun DayCard(
-    tempIcon: String,
-    day: String,
-    highTemp: String,
-    lowTemp: String,
+    dayNum: Int,
+    weatherViewModel: WeatherViewModel,
     onNavigateToDayScreen: () -> Unit
 ) {
-    val cardWidth = dimensionResource(id = R.dimen.day_card_width)
-    val tempPadding = dimensionResource(id = R.dimen.day_card_temp_padding_horizontal)
+    val weatherData by weatherViewModel.weatherData.collectAsState(null)
+    val dayAbbrev by weatherViewModel.dayAbbrevs[dayNum].collectAsState()
+    val today = weatherData?.forecast?.forecastDay?.get(dayNum)?.day
+    val icon = today?.condition?.icon ?: ""
+    val highTemp = today?.maxTempC
+    val lowTemp = today?.minTempC
+
     Card(
         modifier = Modifier
-            .width(cardWidth)
-            .clickable { onNavigateToDayScreen() },
+            .width(dimensionResource(id = R.dimen.day_card_width))
+            .clickable {
+                onNavigateToDayScreen()
+                weatherViewModel.updateDayNum(dayNum)
+            },
         colors = CardDefaults.cardColors(
             containerColor = Gray
         )
     ) {
-        DayCardTitle(value = day)
+        DayCardTitle(value = dayAbbrev)
         AsyncImage(
-            modifier = Modifier.size(cardWidth),
-            model = tempIcon,
+            modifier = Modifier
+                .fillMaxWidth()
+                .size(dimensionResource(id = R.dimen.day_icon_size))
+                .align(Alignment.CenterHorizontally),
+            model = "https:$icon",
             contentDescription = stringResource(id = R.string.weather_icon),
         )
-        Column(modifier = Modifier.padding(horizontal = tempPadding)) {
+        Column(modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.day_card_temp_padding_horizontal))) {
             DayCardTemp(value = highTemp)
             Divider(color = Navy)
             DayCardTemp(value = lowTemp)
@@ -75,14 +90,14 @@ fun DayCardTitle(value: String) {
 }
 
 @Composable
-fun DayCardTemp(value: String) {
+fun DayCardTemp(value: Double?) {
     val verticalPadding = dimensionResource(id = R.dimen.day_card_temp_padding_vertical)
     val tempFontSize = dimensionResource(id = R.dimen.day_card_temp_font_size).value.sp
     Text(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = verticalPadding),
-        text = value,
+        text = value.toString(),
         textAlign = TextAlign.Center,
         color = Navy,
         fontSize = tempFontSize

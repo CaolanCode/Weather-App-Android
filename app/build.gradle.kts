@@ -1,5 +1,3 @@
-import java.util.Properties
-
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -12,14 +10,10 @@ android {
 
     defaultConfig {
         applicationId = "com.caolancode.weatherapp"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
-
-        val properties = Properties()
-        properties.load(project.rootProject.file("local.properties").inputStream())
-        buildConfigField("String", "WEATHER_API_KEY", "\"${properties.getProperty("weatherApiKey")}\"")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -57,18 +51,10 @@ android {
     }
 
     secrets {
-        // Optionally specify a different file name containing your secrets.
-        // The plugin defaults to "local.properties"
         propertiesFileName = "secrets.properties"
-
-        // A properties file containing default secret values. This file can be
-        // checked in version control.
         defaultPropertiesFileName = "local.defaults.properties"
-
-        // Configure which keys should be ignored by the plugin by providing regular expressions.
-        // "sdk.dir" is ignored by default.
-        ignoreList.add("keyToIgnore") // Ignore the key "keyToIgnore"
-        ignoreList.add("sdk.*")       // Ignore all keys matching the regexp "sdk.*"
+        ignoreList.add("keyToIgnore")
+        ignoreList.add("sdk.*")
     }
 }
 

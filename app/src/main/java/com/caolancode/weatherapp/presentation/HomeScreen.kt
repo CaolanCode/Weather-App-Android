@@ -8,13 +8,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import com.caolancode.weatherapp.R
+import com.caolancode.weatherapp.domain.WeatherViewModel
 import com.caolancode.weatherapp.presentation.components.DayCard
 import com.caolancode.weatherapp.presentation.components.LocationMap
 import com.caolancode.weatherapp.presentation.ui.theme.Navy
@@ -23,15 +23,14 @@ import com.caolancode.weatherapp.presentation.ui.theme.White
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    onNavigateToDayScreen: () -> Unit
+    onNavigateToDayScreen: () -> Unit,
+    weatherViewModel: WeatherViewModel
 ) {
-    val tempIcon = "https://cdn.weatherapi.com/weather/64x64/day/143.png"
-    val day = "Mon"
-    val highTemp = "8ºC"
-    val lowTemp = "5ºC"
-    val location = "SINGAPORE"
+    val weatherData by weatherViewModel.weatherData.collectAsState(null)
     val locationPadding = dimensionResource(id = R.dimen.home_location_padding)
     val locationFontSize = dimensionResource(id = R.dimen.home_location_font_size).value.sp
+    val location = weatherData?.location?.name ?: ""
+
     Column {
         LocationMap(modifier = modifier)
         Text(
@@ -50,24 +49,18 @@ fun HomeScreen(
             horizontalArrangement = Arrangement.SpaceAround
         ) {
             DayCard(
-                tempIcon,
-                day,
-                highTemp,
-                lowTemp,
+                dayNum = 0,
+                weatherViewModel,
                 onNavigateToDayScreen
             )
             DayCard(
-                tempIcon,
-                day,
-                highTemp,
-                lowTemp,
+                dayNum = 1,
+                weatherViewModel,
                 onNavigateToDayScreen
             )
             DayCard(
-                tempIcon,
-                day,
-                highTemp,
-                lowTemp,
+                dayNum = 2,
+                weatherViewModel,
                 onNavigateToDayScreen
             )
         }

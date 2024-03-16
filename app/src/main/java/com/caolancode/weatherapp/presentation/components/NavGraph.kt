@@ -7,26 +7,30 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.caolancode.weatherapp.data.Destination
+import com.caolancode.weatherapp.data.WeatherData
+import com.caolancode.weatherapp.domain.WeatherViewModel
 import com.caolancode.weatherapp.presentation.DayScreen
 import com.caolancode.weatherapp.presentation.HomeScreen
 
 @Composable
 fun SetupNavGraph(
     modifier: Modifier = Modifier,
-    navController: NavHostController = rememberNavController()
+    navHostController: NavHostController = rememberNavController(),
+    weatherViewModel: WeatherViewModel
     ) {
         NavHost(
             modifier = modifier,
-            navController = navController,
+            navController = navHostController,
             startDestination = Destination.Home.route
         ) {
             composable(Destination.Home.route) {
                 HomeScreen(
-                    onNavigateToDayScreen = { navController.navigate(Destination.Day.route) }
+                    onNavigateToDayScreen = { navHostController.navigate(Destination.Day.route) },
+                    weatherViewModel = weatherViewModel
                 )
             }
             composable(Destination.Day.route) {
-                DayScreen()
+                DayScreen(weatherViewModel)
             }
         }
 }

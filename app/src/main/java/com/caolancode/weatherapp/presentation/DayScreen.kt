@@ -1,5 +1,6 @@
 package com.caolancode.weatherapp.presentation
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,30 +11,36 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.NavigateBefore
+import androidx.compose.material.icons.filled.NavigateNext
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.caolancode.weatherapp.R
-import com.caolancode.weatherapp.presentation.components.Header
+import com.caolancode.weatherapp.domain.WeatherViewModel
 import com.caolancode.weatherapp.presentation.components.HourSlider
 import com.caolancode.weatherapp.presentation.ui.theme.Navy
 import com.caolancode.weatherapp.presentation.ui.theme.White
 
 @Composable
-fun DayScreen() {
+fun DayScreen(weatherViewModel: WeatherViewModel) {
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
         Title()
-        Location()
-        HourSlider()
+        Location(weatherViewModel)
+        HourSlider(weatherViewModel)
+        SwitchButtons(weatherViewModel)
     }
 }
 
@@ -59,21 +66,17 @@ fun Title() {
 }
 
 @Composable
-fun Location() {
-    val location = "Singapore"
-    val date = "Fri 08th March"
+fun Location(weatherViewModel: WeatherViewModel) {
+    val weatherData by weatherViewModel.weatherData.collectAsState(null)
+    val dayNum by weatherViewModel.dayNum.collectAsState()
+    val location = weatherData?.location?.name ?: ""
+    val date by weatherViewModel.dayDates[dayNum!!].collectAsState()
+    Log.d("TAG", "Location: $date  $dayNum")
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .background(Navy)
-            .padding(
-                vertical = dimensionResource(
-                    id = R.dimen.day_location_padding_vertical
-                ),
-                horizontal = dimensionResource(
-                    id = R.dimen.day_location_padding_horizontal
-                )
-            ),
+            .padding(dimensionResource(id = R.dimen.day_location_padding)),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
@@ -81,9 +84,51 @@ fun Location() {
             color = White,
             fontSize = dimensionResource(id = R.dimen.day_location_font_size).value.sp
         )
-        Text(text = date,
+        Text(
+            text = date,
             color = White,
             fontSize = dimensionResource(id = R.dimen.day_location_font_size).value.sp
         )
+    }
+}
+
+@Composable
+fun SwitchButtons(weatherViewModel: WeatherViewModel) {
+    val dayNum by weatherViewModel.dayNum.collectAsState()
+    val shouldShowPrev = dayNum!! > 0
+    val shouldShowNext = dayNum!! < 2
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = dimensionResource(id = R.dimen.bottom_button_padding)),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Button(
+            colors = ButtonDefaults.buttonColors(Navy),
+            onClick = {
+
+            },
+            enabled = shouldShowPrev
+        ) {
+            Icon(
+                imageVector = Icons.Filled.NavigateBefore,
+                contentDescription = stringResource(id = R.string.prev_icon_description)
+            )
+            Text(text = stringResource(id = R.string.prev_button))
+        }
+        Button(
+            colors = ButtonDefaults.buttonColors(Navy),
+            onClick = {
+
+            },
+            enabled = shouldShowNext
+        ) {
+            Text(text = stringResource(id = R.string.next_button))
+            Icon(
+                imageVector = Icons.Filled.NavigateNext,
+                contentDescription = stringResource(id = R.string.prev_icon_description)
+            )
+        }
     }
 }

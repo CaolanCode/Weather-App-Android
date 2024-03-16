@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class Hour(
     @SerializedName("time_epoch")
-    val timeEpoch: Int,
+    val timeEpoch: Long,
     val time: String,
     @SerializedName("temp_c")
     val tempC: Double,

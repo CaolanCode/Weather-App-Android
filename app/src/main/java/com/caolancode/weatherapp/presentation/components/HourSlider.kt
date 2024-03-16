@@ -1,12 +1,13 @@
 package com.caolancode.weatherapp.presentation.components
 
-import android.content.ClipData.Item
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyRow
@@ -17,9 +18,10 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -27,32 +29,51 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.caolancode.weatherapp.R
+import com.caolancode.weatherapp.domain.WeatherViewModel
 import com.caolancode.weatherapp.presentation.ui.theme.Navy
 import com.caolancode.weatherapp.presentation.ui.theme.RainBlue
 import com.caolancode.weatherapp.presentation.ui.theme.White
+import com.caolancode.weatherapp.presentation.ui.theme.Yellow
 
 @Composable
-fun HourSlider() {
+fun HourSlider(weatherViewModel: WeatherViewModel) {
+    val weatherData by weatherViewModel.weatherData.collectAsState(null)
+    val dayNum by weatherViewModel.dayNum.collectAsState()
     LazyRow {
-        for( i in 1..24) {
+        for( i in -1..23) {
             item {
-                if (i == 1) {
+                if (i == -1) {
                     Label()
                 } else {
+                    val dateTime = weatherData?.forecast?.forecastDay?.get(dayNum!!)?.hour?.get(i)?.time ?: "00:00"
+                    val time = dateTime.takeLast(5)
+                    val sunrise = weatherData?.forecast?.forecastDay?.get(dayNum!!)?.astro?.sunrise ?: "00:00"
+                    val sunset = weatherData?.forecast?.forecastDay?.get(dayNum!!)?.astro?.sunset ?: "00:00"
+                    val icon = weatherData?.forecast?.forecastDay?.get(dayNum!!)?.hour?.get(i)?.condition?.icon ?: ""
+                    val chanceOfRain = weatherData?.forecast?.forecastDay?.get(dayNum!!)?.hour?.get(i)?.chanceOfRain ?: 0
+                    val windSpeed = weatherData?.forecast?.forecastDay?.get(dayNum!!)?.hour?.get(i)?.windKph ?: 0.0
+                    val gust = weatherData?.forecast?.forecastDay?.get(dayNum!!)?.hour?.get(i)?.gustKph ?: 0.0
+                    val temp = weatherData?.forecast?.forecastDay?.get(dayNum!!)?.hour?.get(i)?.tempC ?: 0.0
+                    val feelsLikeTemp = weatherData?.forecast?.forecastDay?.get(dayNum!!)?.hour?.get(i)?.feelsLikeC ?: 0.0
+                    val doublePrecipMM = weatherData?.forecast?.forecastDay?.get(dayNum!!)?.hour?.get(i)?.precipMm ?: 0.0
+                    val precipMM = Math.round(doublePrecipMM * 10.0) / 10.0
+                    val humidity = weatherData?.forecast?.forecastDay?.get(dayNum!!)?.hour?.get(i)?.humidity ?: 0
+                    val dewPoint = weatherData?.forecast?.forecastDay?.get(dayNum!!)?.hour?.get(i)?.dewPointC ?: 0.0
+                    val pressureMb = weatherData?.forecast?.forecastDay?.get(dayNum!!)?.hour?.get(i)?.pressureMb ?: 0.0
                     Hour(
-                        time = "14.00",
-                        sunrise = "07:00",
-                        sunset = "17:00",
-                        icon = "https://cdn.weatherapi.com/weather/64x64/night/143.png",
-                        chanceOfRain = 100,
-                        windSpeed = 25,
-                        gust = 14,
-                        temp = 7,
-                        feelsLikeTemp = 6,
-                        millRain = 2,
-                        humidity = 95,
-                        dewPoint = 43,
-                        hPa = 1000
+                        time = time,
+                        sunrise = sunrise,
+                        sunset = sunset,
+                        icon = "https:$icon",
+                        chanceOfRain = chanceOfRain,
+                        windSpeed = windSpeed,
+                        gust = gust,
+                        temp = temp,
+                        feelsLikeTemp = feelsLikeTemp,
+                        precipMM = precipMM,
+                        humidity = humidity,
+                        dewPoint = dewPoint,
+                        pressureMb = pressureMb
                     )
                 }
             }
@@ -160,10 +181,7 @@ fun BoldLabel(
         modifier = modifier
             .fillMaxWidth()
             .background(Navy)
-            .padding(
-                vertical = dimensionResource(id = R.dimen.vertical_label_padding),
-                horizontal = dimensionResource(id = R.dimen.horizontal_label_padding)
-            ),
+            .padding(dimensionResource(id = R.dimen.label_padding)),
         text = value,
         fontWeight = FontWeight.Bold,
         color = White
@@ -179,10 +197,7 @@ fun LightLabel(
         modifier = modifier
             .fillMaxWidth()
             .background(Navy)
-            .padding(
-                vertical = dimensionResource(id = R.dimen.vertical_label_padding),
-                horizontal = dimensionResource(id = R.dimen.horizontal_label_padding)
-            ),
+            .padding(dimensionResource(id = R.dimen.label_padding)),
         text = value,
         fontWeight = FontWeight.Light,
         color = White
@@ -196,42 +211,27 @@ fun Hour(
     sunset: String,
     icon: String,
     chanceOfRain: Int,
-    windSpeed: Int,
-    gust: Int,
-    temp: Int,
-    feelsLikeTemp: Int,
-    millRain: Int,
+    windSpeed: Double,
+    gust: Double,
+    temp: Double,
+    feelsLikeTemp: Double,
+    precipMM: Double,
     humidity: Int,
-    dewPoint: Int,
-    hPa: Int
+    dewPoint: Double,
+    pressureMb: Double
 ) {
+    val timeHour = time.take(2).toIntOrNull()
+    val sunriseHour = sunrise.take(2).toIntOrNull()
+    val sunsetHour = sunset.take(2).toIntOrNull()
+    val windSpeedRound = Math.round(windSpeed)
+    val gustRound = Math.round(gust)
+    val tempRound = Math.round(temp)
+    val feelsLikeTempRound = Math.round(feelsLikeTemp)
+
     Column(
-        modifier = Modifier.width(50.dp)
+        modifier = Modifier.width(dimensionResource(id = R.dimen.hour_column_width))
     ) {
         TextHourItem(value = time)
-        Divider(
-            thickness = dimensionResource(id = R.dimen.divider_thickness),
-            color = Navy
-        )
-        Box(
-            modifier = Modifier.height(dimensionResource(id = R.dimen.small_label_height))
-        ) {
-            if(time.take(2) == sunrise.take(2) || time.take(2) == sunset.take(2) ) { 
-                Icon(
-                    imageVector = Icons.Filled.WbSunny,
-                    contentDescription = stringResource(id = R.string.sunrise_icon)
-                )
-            }
-        }
-        Divider(
-            thickness = dimensionResource(id = R.dimen.divider_thickness),
-            color = Navy
-        )
-        AsyncImage(
-            modifier = Modifier.height(dimensionResource(id = R.dimen.medium_label_height)),
-            model = icon,
-            contentDescription = stringResource(id = R.string.hour_icon)
-        )
         Divider(
             thickness = dimensionResource(id = R.dimen.divider_thickness),
             color = Navy
@@ -242,11 +242,49 @@ fun Hour(
                 .fillMaxWidth(),
             contentAlignment = Alignment.Center
         ) {
-            Icon(
-                imageVector = Icons.Filled.WaterDrop,
-                contentDescription = stringResource(id = R.string.rain_icon),
-                tint = RainBlue
+            if(timeHour == sunriseHour || timeHour == (sunsetHour!! + 12) ) {
+                Icon(
+                    imageVector = Icons.Filled.WbSunny,
+                    contentDescription = stringResource(id = R.string.sunrise_icon),
+                    tint = Yellow
+                )
+            }
+        }
+        Divider(
+            thickness = dimensionResource(id = R.dimen.divider_thickness),
+            color = Navy
+        )
+        Box(
+            modifier = Modifier
+                .height(dimensionResource(id = R.dimen.medium_label_height))
+                .fillMaxWidth(),
+            contentAlignment = Alignment.Center
+        ) {
+            AsyncImage(
+                modifier = Modifier.size(dimensionResource(id = R.dimen.medium_label_height)),
+                model = icon,
+                contentDescription = stringResource(id = R.string.hour_icon)
             )
+        }
+        Divider(
+            thickness = dimensionResource(id = R.dimen.divider_thickness),
+            color = Navy
+        )
+        Box(
+            modifier = Modifier
+                .height(dimensionResource(id = R.dimen.small_label_height))
+                .fillMaxWidth(),
+            contentAlignment = Alignment.Center
+        ) {
+            if (chanceOfRain >= 20) {
+                Icon(
+                    modifier = Modifier.size(dimensionResource(id = R.dimen.raindrop_icon_size)),
+                    imageVector = Icons.Filled.WaterDrop,
+                    contentDescription = stringResource(id = R.string.rain_icon),
+                    tint = RainBlue
+                )
+            }
+
         }
         TextHourItem(value = "$chanceOfRain%")
         Divider(
@@ -256,15 +294,15 @@ fun Hour(
         Box(
             modifier = Modifier.height(dimensionResource(id = R.dimen.large_label_height))
         ) {
-            Text(text = "$windSpeed")
+            Text(text = "$windSpeedRound")
         }
-        TextHourItem(value = "$gust")
+        TextHourItem(value = "$gustRound")
         Divider(
             thickness = dimensionResource(id = R.dimen.divider_thickness),
             color = Navy
         )
-        TextHourItem(value = "${temp}ºC")
-        TextHourItem(value = "${feelsLikeTemp}ºC")
+        TextHourItem(value = "${tempRound}ºC")
+        TextHourItem(value = "${feelsLikeTempRound}ºC")
         Divider(
             thickness = dimensionResource(id = R.dimen.divider_thickness),
             color = Navy
@@ -276,7 +314,7 @@ fun Hour(
         ) {
 
         }
-        TextHourItem(value = "${millRain}mm")
+        TextHourItem(value = "${precipMM}mm")
         Divider(
             thickness = dimensionResource(id = R.dimen.divider_thickness),
             color = Navy
@@ -291,7 +329,7 @@ fun Hour(
             thickness = dimensionResource(id = R.dimen.divider_thickness),
             color = Navy
         )
-        TextHourItem(value = "$hPa")
+        TextHourItem(value = "$pressureMb")
     }
 }
 
