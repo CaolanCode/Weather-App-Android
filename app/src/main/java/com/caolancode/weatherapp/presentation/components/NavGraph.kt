@@ -1,6 +1,8 @@
 package com.caolancode.weatherapp.presentation.components
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -18,16 +20,22 @@ fun SetupNavGraph(
     navHostController: NavHostController = rememberNavController(),
     weatherViewModel: WeatherViewModel
     ) {
+        val isSearching by weatherViewModel.isSearching.collectAsState()
+    
         NavHost(
             modifier = modifier,
             navController = navHostController,
             startDestination = Destination.Home.route
         ) {
             composable(Destination.Home.route) {
-                HomeScreen(
-                    onNavigateToDayScreen = { navHostController.navigate(Destination.Day.route) },
-                    weatherViewModel = weatherViewModel
-                )
+                if (isSearching) {
+                    LocationSearchBar(weatherViewModel = weatherViewModel)
+                } else {
+                    HomeScreen(
+                        onNavigateToDayScreen = { navHostController.navigate(Destination.Day.route) },
+                        weatherViewModel = weatherViewModel
+                    )
+                }
             }
             composable(Destination.Day.route) {
                 DayScreen(weatherViewModel)

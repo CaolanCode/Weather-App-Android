@@ -1,6 +1,5 @@
 package com.caolancode.weatherapp.presentation
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,7 +19,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -67,11 +65,9 @@ fun Title() {
 
 @Composable
 fun Location(weatherViewModel: WeatherViewModel) {
-    val weatherData by weatherViewModel.weatherData.collectAsState(null)
     val dayNum by weatherViewModel.dayNum.collectAsState()
-    val location = weatherData?.location?.name ?: ""
+    val location by weatherViewModel.location.collectAsState()
     val date by weatherViewModel.dayDates[dayNum!!].collectAsState()
-    Log.d("TAG", "Location: $date  $dayNum")
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -107,7 +103,7 @@ fun SwitchButtons(weatherViewModel: WeatherViewModel) {
         Button(
             colors = ButtonDefaults.buttonColors(Navy),
             onClick = {
-
+                weatherViewModel.setDayNum(dayNum!! - 1)
             },
             enabled = shouldShowPrev
         ) {
@@ -120,7 +116,7 @@ fun SwitchButtons(weatherViewModel: WeatherViewModel) {
         Button(
             colors = ButtonDefaults.buttonColors(Navy),
             onClick = {
-
+                weatherViewModel.setDayNum(dayNum!! + 1)
             },
             enabled = shouldShowNext
         ) {

@@ -2,8 +2,11 @@ package com.caolancode.weatherapp.presentation.components
 
 import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -26,7 +29,6 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.caolancode.weatherapp.R
 import com.caolancode.weatherapp.domain.WeatherViewModel
@@ -39,43 +41,50 @@ import com.caolancode.weatherapp.presentation.ui.theme.Yellow
 fun HourSlider(weatherViewModel: WeatherViewModel) {
     val weatherData by weatherViewModel.weatherData.collectAsState(null)
     val dayNum by weatherViewModel.dayNum.collectAsState()
+    var hour = 0
+    if (dayNum == 0) {
+        val currentTime = weatherData?.current?.lastUpdated?.takeLast(5) ?: "00:00"
+        hour = currentTime.take(2).toIntOrNull() ?: 0
+    }
     LazyRow {
-        for( i in -1..23) {
+        item {
+            Label()
+        }
+        for( i in hour..23) {
             item {
-                if (i == -1) {
-                    Label()
-                } else {
-                    val dateTime = weatherData?.forecast?.forecastDay?.get(dayNum!!)?.hour?.get(i)?.time ?: "00:00"
-                    val time = dateTime.takeLast(5)
-                    val sunrise = weatherData?.forecast?.forecastDay?.get(dayNum!!)?.astro?.sunrise ?: "00:00"
-                    val sunset = weatherData?.forecast?.forecastDay?.get(dayNum!!)?.astro?.sunset ?: "00:00"
-                    val icon = weatherData?.forecast?.forecastDay?.get(dayNum!!)?.hour?.get(i)?.condition?.icon ?: ""
-                    val chanceOfRain = weatherData?.forecast?.forecastDay?.get(dayNum!!)?.hour?.get(i)?.chanceOfRain ?: 0
-                    val windSpeed = weatherData?.forecast?.forecastDay?.get(dayNum!!)?.hour?.get(i)?.windKph ?: 0.0
-                    val gust = weatherData?.forecast?.forecastDay?.get(dayNum!!)?.hour?.get(i)?.gustKph ?: 0.0
-                    val temp = weatherData?.forecast?.forecastDay?.get(dayNum!!)?.hour?.get(i)?.tempC ?: 0.0
-                    val feelsLikeTemp = weatherData?.forecast?.forecastDay?.get(dayNum!!)?.hour?.get(i)?.feelsLikeC ?: 0.0
-                    val doublePrecipMM = weatherData?.forecast?.forecastDay?.get(dayNum!!)?.hour?.get(i)?.precipMm ?: 0.0
-                    val precipMM = Math.round(doublePrecipMM * 10.0) / 10.0
-                    val humidity = weatherData?.forecast?.forecastDay?.get(dayNum!!)?.hour?.get(i)?.humidity ?: 0
-                    val dewPoint = weatherData?.forecast?.forecastDay?.get(dayNum!!)?.hour?.get(i)?.dewPointC ?: 0.0
-                    val pressureMb = weatherData?.forecast?.forecastDay?.get(dayNum!!)?.hour?.get(i)?.pressureMb ?: 0.0
-                    Hour(
-                        time = time,
-                        sunrise = sunrise,
-                        sunset = sunset,
-                        icon = "https:$icon",
-                        chanceOfRain = chanceOfRain,
-                        windSpeed = windSpeed,
-                        gust = gust,
-                        temp = temp,
-                        feelsLikeTemp = feelsLikeTemp,
-                        precipMM = precipMM,
-                        humidity = humidity,
-                        dewPoint = dewPoint,
-                        pressureMb = pressureMb
-                    )
-                }
+                val dateTime = weatherData?.forecast?.forecastDay?.get(dayNum!!)?.hour?.get(i)?.time ?: "00:00"
+                val time = dateTime.takeLast(5)
+                val sunrise = weatherData?.forecast?.forecastDay?.get(dayNum!!)?.astro?.sunrise ?: "00:00"
+                val sunset = weatherData?.forecast?.forecastDay?.get(dayNum!!)?.astro?.sunset ?: "00:00"
+                val icon = weatherData?.forecast?.forecastDay?.get(dayNum!!)?.hour?.get(i)?.condition?.icon ?: ""
+                val chanceOfRain = weatherData?.forecast?.forecastDay?.get(dayNum!!)?.hour?.get(i)?.chanceOfRain ?: 0
+                val windSpeed = weatherData?.forecast?.forecastDay?.get(dayNum!!)?.hour?.get(i)?.windKph ?: 0.0
+                val gust = weatherData?.forecast?.forecastDay?.get(dayNum!!)?.hour?.get(i)?.gustKph ?: 0.0
+                val temp = weatherData?.forecast?.forecastDay?.get(dayNum!!)?.hour?.get(i)?.tempC ?: 0.0
+                val feelsLikeTemp = weatherData?.forecast?.forecastDay?.get(dayNum!!)?.hour?.get(i)?.feelsLikeC ?: 0.0
+                val doublePrecipMM = weatherData?.forecast?.forecastDay?.get(dayNum!!)?.hour?.get(i)?.precipMm ?: 0.0
+                val precipMM = Math.round(doublePrecipMM * 10.0) / 10.0
+                val humidity = weatherData?.forecast?.forecastDay?.get(dayNum!!)?.hour?.get(i)?.humidity ?: 0
+                val dewPoint = weatherData?.forecast?.forecastDay?.get(dayNum!!)?.hour?.get(i)?.dewPointC ?: 0.0
+                val pressureMb = weatherData?.forecast?.forecastDay?.get(dayNum!!)?.hour?.get(i)?.pressureMb ?: 0.0
+                val tempWindDegree = weatherData?.forecast?.forecastDay?.get(dayNum!!)?.hour?.get(i)?.windDegree ?: 0
+                val windDegree = (tempWindDegree + 180) % 360
+                Hour(
+                    time = time,
+                    sunrise = sunrise,
+                    sunset = sunset,
+                    icon = "https:$icon",
+                    chanceOfRain = chanceOfRain,
+                    windSpeed = windSpeed,
+                    gust = gust,
+                    temp = temp,
+                    feelsLikeTemp = feelsLikeTemp,
+                    precipMM = precipMM,
+                    humidity = humidity,
+                    dewPoint = dewPoint,
+                    pressureMb = pressureMb,
+                    windDegree = windDegree
+                )
             }
         }
     }
@@ -218,7 +227,8 @@ fun Hour(
     precipMM: Double,
     humidity: Int,
     dewPoint: Double,
-    pressureMb: Double
+    pressureMb: Double,
+    windDegree: Int
 ) {
     val timeHour = time.take(2).toIntOrNull()
     val sunriseHour = sunrise.take(2).toIntOrNull()
@@ -291,10 +301,15 @@ fun Hour(
             thickness = dimensionResource(id = R.dimen.divider_thickness),
             color = Navy
         )
-        Box(
+        Column(
             modifier = Modifier.height(dimensionResource(id = R.dimen.large_label_height))
         ) {
-            Text(text = "$windSpeedRound")
+            Box(
+                modifier = Modifier.height(dimensionResource(id = R.dimen.medium_label_height))
+            ) {
+                WindDirection(degrees = windDegree.toFloat(), color = Navy)
+            }
+            TextHourItem(value = "$windSpeedRound")
         }
         TextHourItem(value = "$gustRound")
         Divider(
@@ -307,12 +322,22 @@ fun Hour(
             thickness = dimensionResource(id = R.dimen.divider_thickness),
             color = Navy
         )
-        Box(
+        Column(
             modifier = Modifier
-                .height(dimensionResource(id = R.dimen.large_label_height))
-                .background(Navy)
+                .height(dimensionResource(id = R.dimen.large_label_height)),
+            verticalArrangement = Arrangement.Bottom
         ) {
-
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.BottomStart
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxHeight(precipMM.toFloat())
+                        .fillMaxWidth()
+                        .background(RainBlue)
+                )
+            }
         }
         TextHourItem(value = "${precipMM}mm")
         Divider(

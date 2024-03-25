@@ -1,6 +1,5 @@
 package com.caolancode.weatherapp.presentation.components
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -21,15 +20,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.caolancode.weatherapp.R
-import com.caolancode.weatherapp.data.Destination
-import com.caolancode.weatherapp.data.WeatherData
 import com.caolancode.weatherapp.domain.WeatherViewModel
 import com.caolancode.weatherapp.presentation.ui.theme.Gray
 import com.caolancode.weatherapp.presentation.ui.theme.Navy
@@ -52,7 +45,7 @@ fun DayCard(
             .width(dimensionResource(id = R.dimen.day_card_width))
             .clickable {
                 onNavigateToDayScreen()
-                weatherViewModel.updateDayNum(dayNum)
+                weatherViewModel.setDayNum(dayNum)
             },
         colors = CardDefaults.cardColors(
             containerColor = Gray

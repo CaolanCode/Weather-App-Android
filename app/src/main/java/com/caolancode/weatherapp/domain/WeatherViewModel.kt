@@ -1,19 +1,16 @@
 package com.caolancode.weatherapp.domain
 
 import android.util.Log
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
+import com.caolancode.weatherapp.data.RetrofitInterface
 import com.caolancode.weatherapp.data.WeatherData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.text.SimpleDateFormat
-import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 import java.util.Calendar
-import java.util.Date
 import java.util.Locale
 
 class WeatherViewModel: ViewModel() {
@@ -40,16 +37,55 @@ class WeatherViewModel: ViewModel() {
     private val _dayNum = MutableStateFlow<Int?>(null)
     val dayNum = _dayNum.asStateFlow()
 
-    fun updateDayNum(num: Int) {
+    private val _latitude = MutableStateFlow(53.3498)
+    val latitude = _latitude.asStateFlow()
+    private val _longitude = MutableStateFlow(6.2603)
+    val longitude = _longitude.asStateFlow()
+
+    private val _location = MutableStateFlow(Util.DEFAULT_LOCATION)
+    val location = _location.asStateFlow()
+
+    private val _searchLocation = MutableStateFlow("")
+    val searchLocation = _searchLocation.asStateFlow()
+
+    private val _isSearching = MutableStateFlow(false)
+    val isSearching = _isSearching.asStateFlow()
+
+    private val _searchHistory = MutableStateFlow(listOf(""))
+    val searchHistory = _searchHistory.asStateFlow()
+
+    fun setSearchLocation(value: String) {
+        _searchLocation.value = value
+    }
+
+    fun setIsSearching(value: Boolean) {
+        _isSearching.value = value
+    }
+
+    fun addSearchToHistory(city: String) {
+        val uniqueCities = _searchHistory.value.toSet() + city
+        _searchHistory.value = uniqueCities.toList()
+    }
+
+    fun setDayNum(num: Int) {
         _dayNum.value = num
     }
 
-    fun updateWeather(data: WeatherData) {
+    fun setLatLon(lat: Double, lon: Double) {
+        _latitude.value = lat
+        _longitude.value = lon
+    }
+
+    fun setWeather(data: WeatherData) {
         _weatherData.value = data
         getDayAbbreviations()
         getDayDates()
+        setLocation(data.location.name)
     }
 
+    fun setLocation(value: String) {
+        _location.value = value
+    }
 
     private fun getDayAbbreviations() {
         val today = Calendar.getInstance()
@@ -79,5 +115,26 @@ class WeatherViewModel: ViewModel() {
         val originalDate = originalFormat.parse(dateString)
         val desiredFormat = SimpleDateFormat("EEE dd'th' MMM")
         return desiredFormat.format(originalDate)
+    }
+
+    fun callWeatherApi(location: String = Util.DEFAULT_LOCATION) {
+        try {
+            val call = RetrofitInterface.api.getPostByLocation(location)
+            call.enqueue(object : Callback<WeatherData> {
+                override fun onResponse(
+                    call: Call<WeatherData>,
+                    response: Response<WeatherData>
+                ) {
+                    setWeather(response.body()!!)
+                    Log.d("TAG", "onResponse: ${response.body()}")
+                }
+
+                override fun onFailure(call: Call<WeatherData>, t: Throwable) {
+                    Log.d("TAG", "onFailure: ${t.message}")
+                }
+            })
+        } catch (e: Exception) {
+            Log.d("TAG", "error: ${e.message}")
+        }
     }
 }

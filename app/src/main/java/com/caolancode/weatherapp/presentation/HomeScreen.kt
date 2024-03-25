@@ -26,13 +26,15 @@ fun HomeScreen(
     onNavigateToDayScreen: () -> Unit,
     weatherViewModel: WeatherViewModel
 ) {
-    val weatherData by weatherViewModel.weatherData.collectAsState(null)
     val locationPadding = dimensionResource(id = R.dimen.home_location_padding)
     val locationFontSize = dimensionResource(id = R.dimen.home_location_font_size).value.sp
-    val location = weatherData?.location?.name ?: ""
+    val location by weatherViewModel.location.collectAsState()
 
     Column {
-        LocationMap(modifier = modifier)
+        LocationMap(
+            modifier = modifier,
+            weatherViewModel = weatherViewModel
+        )
         Text(
             modifier = Modifier
                 .background(Navy)

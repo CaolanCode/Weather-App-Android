@@ -92,6 +92,7 @@ dependencies {
     // Documentation: https://developers.google.com/maps/documentation/android-sdk/config
     implementation("com.google.maps.android:maps-compose:4.3.3")
     implementation("com.google.android.gms:play-services-maps:18.2.0")
+    implementation("com.google.android.gms:play-services-location:21.2.0")
 
     // Coil loading library
     implementation("io.coil-kt:coil-compose:2.6.0")
@@ -100,5 +101,5 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.7.7")
 
     // icons
-    implementation("androidx.compose.material:material-icons-extended:1.6.3")
+    implementation("androidx.compose.material:material-icons-extended:1.6.4")
 }
