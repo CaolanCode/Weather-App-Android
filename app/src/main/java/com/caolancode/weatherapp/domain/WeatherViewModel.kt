@@ -54,6 +54,23 @@ class WeatherViewModel: ViewModel() {
     private val _searchHistory = MutableStateFlow(listOf(""))
     val searchHistory = _searchHistory.asStateFlow()
 
+    private val _currentIcon = MutableStateFlow("")
+    val currentIcon = _currentIcon.asStateFlow()
+    private val _currentTemp = MutableStateFlow(0.0)
+    val currentTemp = _currentTemp.asStateFlow()
+    private val _currentWindSpeed = MutableStateFlow(0.0)
+    val currentWindSpeed = _currentWindSpeed.asStateFlow()
+    private val _currentRainMM = MutableStateFlow(0.0)
+    val currentRainMM = _currentRainMM.asStateFlow()
+    private val _currentHumidity = MutableStateFlow(0)
+    val currentHumidity = _currentHumidity.asStateFlow()
+    private val _currentPressure = MutableStateFlow(0.0)
+    val currentPressure = _currentPressure.asStateFlow()
+    private val _currentCondition = MutableStateFlow("")
+    val currentCondition = _currentCondition.asStateFlow()
+    private val _currentWindDegree = MutableStateFlow(0)
+    val currentWindDegree = _currentWindDegree.asStateFlow()
+
     fun setSearchLocation(value: String) {
         _searchLocation.value = value
     }
@@ -81,10 +98,23 @@ class WeatherViewModel: ViewModel() {
         getDayAbbreviations()
         getDayDates()
         setLocation(data.location.name)
+        setCurrentCondition()
     }
 
-    fun setLocation(value: String) {
+    private fun setLocation(value: String) {
         _location.value = value
+    }
+
+    private fun setCurrentCondition() {
+        val current = weatherData.value?.current
+        _currentIcon.value = current?.condition?.icon ?: ""
+        _currentTemp.value = current?.tempC ?: 0.0
+        _currentWindSpeed.value = current?.windKph ?: 0.0
+        _currentRainMM.value = current?.precipMm ?: 0.0
+        _currentHumidity.value = current?.humidity ?: 0
+        _currentPressure.value = current?.pressureMb ?: 0.0
+        _currentCondition.value = current?.condition?.text ?: ""
+        _currentWindDegree.value = current?.windDegree ?: 0
     }
 
     private fun getDayAbbreviations() {
@@ -102,11 +132,12 @@ class WeatherViewModel: ViewModel() {
     }
 
     private fun getDayDates() {
-        val today = weatherData.value?.forecast?.forecastDay?.get(0)?.date ?: ""
+        val day = weatherData.value?.forecast?.forecastDay
+        val today = day?.get(0)?.date ?: ""
         _todayDayDate.value = formatDayDate(today)
-        val tomorrow = weatherData.value?.forecast?.forecastDay?.get(1)?.date ?: ""
+        val tomorrow = day?.get(1)?.date ?: ""
         _tomorrowDayDate.value = formatDayDate(tomorrow)
-        val twoDays = weatherData.value?.forecast?.forecastDay?.get(2)?.date ?: ""
+        val twoDays = day?.get(2)?.date ?: ""
         _twoDaysDayDate.value = formatDayDate(twoDays)
     }
 

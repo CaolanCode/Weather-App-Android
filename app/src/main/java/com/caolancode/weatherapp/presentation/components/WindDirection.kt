@@ -13,11 +13,12 @@ import kotlin.math.sin
 @Composable
 fun WindDirection(degrees: Float, color: Color, modifier: Modifier = Modifier) {
     Canvas(modifier = modifier.fillMaxSize()) {
+        val adjustedDegrees = (degrees + 180) % 360
         val radius = size.minDimension / 2
         val centerX = size.width / 2
         val centerY = size.height / 2
 
-        val radians = Math.toRadians(degrees.toDouble())
+        val radians = Math.toRadians(adjustedDegrees.toDouble())
 
         // Calculate arrow points
         val tip = Offset(centerX + 0.5f * radius * sin(radians).toFloat(), centerY - 0.5f * radius * cos(radians).toFloat())

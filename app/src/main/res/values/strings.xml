@@ -7,6 +7,12 @@
     <string name="title_eireann">éireann</string>
     <string name="header_search_description">Search location icon</string>
     <string name="header_menu_description">Menu icon</string>
+    <string name="current_temp_title">Temp ºC</string>
+    <string name="current_wind_title">Wind km/h</string>
+    <string name="current_rain_title">Rain</string>
+    <string name="current_humidity_title">Humidity</string>
+    <string name="current_pressure_title">Pressure</string>
+    <string name="current_banner_title">Current</string>
 
 
     // day screen

@@ -67,7 +67,7 @@ class MainActivity : ComponentActivity() {
         getCurrentLocation()
     }
 
-    @SuppressLint("MissingPermission")
+    @SuppressLint("MissingPermission") // permission requested
     private fun getCurrentLocation() {
         if (checkPermissions()) {
             if (isLocationEnabled()) {

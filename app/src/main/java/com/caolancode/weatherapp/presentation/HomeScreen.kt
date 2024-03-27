@@ -12,9 +12,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.sp
 import com.caolancode.weatherapp.R
 import com.caolancode.weatherapp.domain.WeatherViewModel
+import com.caolancode.weatherapp.presentation.components.CurrentWeather
 import com.caolancode.weatherapp.presentation.components.DayCard
 import com.caolancode.weatherapp.presentation.components.LocationMap
 import com.caolancode.weatherapp.presentation.ui.theme.Navy
@@ -26,8 +28,6 @@ fun HomeScreen(
     onNavigateToDayScreen: () -> Unit,
     weatherViewModel: WeatherViewModel
 ) {
-    val locationPadding = dimensionResource(id = R.dimen.home_location_padding)
-    val locationFontSize = dimensionResource(id = R.dimen.home_location_font_size).value.sp
     val location by weatherViewModel.location.collectAsState()
 
     Column {
@@ -35,19 +35,11 @@ fun HomeScreen(
             modifier = modifier,
             weatherViewModel = weatherViewModel
         )
-        Text(
-            modifier = Modifier
-                .background(Navy)
-                .fillMaxWidth()
-                .padding(locationPadding),
-            text = location,
-            color = White,
-            fontSize = locationFontSize
-        )
+        Banner(title = location)
         Row(
             modifier = modifier
                 .fillMaxWidth()
-                .padding(top = dimensionResource(id = R.dimen.day_card_top_padding)),
+                .padding(vertical =  dimensionResource(id = R.dimen.day_card_padding)),
             horizontalArrangement = Arrangement.SpaceAround
         ) {
             DayCard(
@@ -66,5 +58,23 @@ fun HomeScreen(
                 onNavigateToDayScreen
             )
         }
+        Banner(title = stringResource(id = R.string.current_banner_title))
+        CurrentWeather(weatherViewModel = weatherViewModel)
     }
+}
+
+@Composable
+fun Banner(title: String) {
+    val bannerPadding = dimensionResource(id = R.dimen.home_banner_padding)
+    val locationFontSize = dimensionResource(id = R.dimen.home_banner_font_size).value.sp
+    
+    Text(
+        modifier = Modifier
+            .background(Navy)
+            .fillMaxWidth()
+            .padding(bannerPadding),
+        text = title,
+        color = White,
+        fontSize = locationFontSize
+    )
 }

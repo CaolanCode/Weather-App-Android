@@ -67,8 +67,8 @@ fun HourSlider(weatherViewModel: WeatherViewModel) {
                 val humidity = weatherData?.forecast?.forecastDay?.get(dayNum!!)?.hour?.get(i)?.humidity ?: 0
                 val dewPoint = weatherData?.forecast?.forecastDay?.get(dayNum!!)?.hour?.get(i)?.dewPointC ?: 0.0
                 val pressureMb = weatherData?.forecast?.forecastDay?.get(dayNum!!)?.hour?.get(i)?.pressureMb ?: 0.0
-                val tempWindDegree = weatherData?.forecast?.forecastDay?.get(dayNum!!)?.hour?.get(i)?.windDegree ?: 0
-                val windDegree = (tempWindDegree + 180) % 360
+                val windDegree = weatherData?.forecast?.forecastDay?.get(dayNum!!)?.hour?.get(i)?.windDegree ?: 0
+
                 Hour(
                     time = time,
                     sunrise = sunrise,
