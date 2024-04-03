@@ -1,5 +1,6 @@
 package com.caolancode.weatherapp.presentation.components
 
+import android.content.ClipData.Item
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,6 +28,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.caolancode.weatherapp.R
+import com.caolancode.weatherapp.domain.Util
 import com.caolancode.weatherapp.domain.WeatherViewModel
 import com.caolancode.weatherapp.presentation.ui.theme.Navy
 
@@ -41,11 +43,15 @@ fun CurrentWeather(weatherViewModel: WeatherViewModel) {
     val pressure by weatherViewModel.currentPressure.collectAsState()
     val condition by weatherViewModel.currentCondition.collectAsState()
     val windDegree by weatherViewModel.currentWindDegree.collectAsState()
+    val roundTemp = Math.round(temp)
 
     Row(
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 10.dp, start = 10.dp),
+            .padding(
+                top = dimensionResource(id = R.dimen.current_padding),
+                start = dimensionResource(id = R.dimen.current_padding)
+            ),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Column(
@@ -55,12 +61,12 @@ fun CurrentWeather(weatherViewModel: WeatherViewModel) {
             Row {
                 Column(
                     modifier = Modifier
-                        .height(150.dp)
-                        .padding(end = 20.dp),
+                        .height(dimensionResource(id = R.dimen.current_item_height))
+                        .padding(end = dimensionResource(id = R.dimen.current_item_padding_end)),
                     verticalArrangement = Arrangement.SpaceBetween
                 ) {
                     Box(
-                        modifier = Modifier.size(70.dp),
+                        modifier = Modifier.size(dimensionResource(id = R.dimen.current_item_icon_size)),
                         contentAlignment = Alignment.Center
                     ) {
                         AsyncImage(
@@ -75,12 +81,12 @@ fun CurrentWeather(weatherViewModel: WeatherViewModel) {
                 }
                 Column(
                     modifier = Modifier
-                        .height(150.dp)
-                        .padding(end = 20.dp),
+                        .height(dimensionResource(id = R.dimen.current_item_height))
+                        .padding(end = dimensionResource(id = R.dimen.current_item_padding_end)),
                     verticalArrangement = Arrangement.SpaceBetween
                 )  {
                     Box(
-                        modifier = Modifier.size(70.dp),
+                        modifier = Modifier.size(dimensionResource(id = R.dimen.current_item_icon_size)),
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
@@ -88,21 +94,21 @@ fun CurrentWeather(weatherViewModel: WeatherViewModel) {
                                 .padding(16.dp)
                                 .drawBehind {
                                     drawCircle(
-                                        color = Color.Yellow,
+                                        color = Util.getTempColor(roundTemp),
                                         radius = this.size.maxDimension
                                     )
                                 },
-                            text = Math.round(temp).toString()
+                            text = roundTemp.toString()
                         )
                     }
                     CenterText(title = stringResource(id = R.string.current_temp_title))
                 }
                 Column(
-                    modifier = Modifier.height(150.dp),
+                    modifier = Modifier.height(dimensionResource(id = R.dimen.current_item_height)),
                     verticalArrangement = Arrangement.SpaceBetween
                 )  {
                     Box(
-                        modifier = Modifier.size(50.dp),
+                        modifier = Modifier.size(dimensionResource(id = R.dimen.current_item_icon_size)),
                         contentAlignment = Alignment.Center
                     ) {
                         WindDirection(
@@ -117,18 +123,25 @@ fun CurrentWeather(weatherViewModel: WeatherViewModel) {
         }
         Column(
             modifier = Modifier
-                .width(100.dp)
-                .fillMaxHeight(),
-            verticalArrangement = Arrangement.Center
+                .padding(top = dimensionResource(id = R.dimen.current_item_list_padding_top))
+                .width(dimensionResource(id = R.dimen.current_item_list_width))
+                .height(dimensionResource(id = R.dimen.current_item_height)),
+            verticalArrangement = Arrangement.SpaceAround
         ) {
-            Text(text = stringResource(id = R.string.current_rain_title))
-            Text(text = "${raimMM}mm")
+            Column {
+                Text(text = stringResource(id = R.string.current_rain_title))
+                Text(text = "${raimMM}mm")
+            }
             Divider()
-            Text(text = stringResource(id = R.string.current_humidity_title))
-            Text(text = "${humidity}%")
+            Column {
+                Text(text = stringResource(id = R.string.current_humidity_title))
+                Text(text = "${humidity}%")
+            }
             Divider()
-            Text(text = stringResource(id = R.string.current_pressure_title))
-            Text(text = "${pressure}hPa")
+            Column {
+                Text(text = stringResource(id = R.string.current_pressure_title))
+                Text(text = "${pressure}hPa")
+            }
         }
     }
 }
@@ -136,7 +149,7 @@ fun CurrentWeather(weatherViewModel: WeatherViewModel) {
 @Composable
 fun CenterText(title: String) {
     Text(
-        modifier = Modifier.width(70.dp),
+        modifier = Modifier.width(dimensionResource(id = R.dimen.current_item_text_width)),
         text = title,
         textAlign = TextAlign.Center
     )

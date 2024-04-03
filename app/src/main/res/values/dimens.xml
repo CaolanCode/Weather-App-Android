@@ -14,6 +14,14 @@
     <dimen name="home_banner_font_size">15sp</dimen>
     <dimen name="day_card_padding">15dp</dimen>
     <dimen name="day_icon_size">70dp</dimen>
+    <dimen name="current_padding">10dp</dimen>
+    <dimen name="current_item_height">150dp</dimen>
+    <dimen name="current_item_padding_end">25dp</dimen>
+    <dimen name="current_item_icon_size">70dp</dimen>
+    <dimen name="current_item_list_width">100dp</dimen>
+    <dimen name="current_item_list_padding_top">30dp</dimen>
+    <dimen name="current_item_text_width">70dp</dimen>
+    <dimen name="current_item_temp_padding">16dp</dimen>
 
     // Day Screen
     <dimen name="day_title_padding">5dp</dimen>

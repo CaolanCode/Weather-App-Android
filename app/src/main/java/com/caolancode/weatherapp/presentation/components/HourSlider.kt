@@ -25,13 +25,16 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import coil.compose.AsyncImage
 import com.caolancode.weatherapp.R
+import com.caolancode.weatherapp.domain.Util
 import com.caolancode.weatherapp.domain.WeatherViewModel
+import com.caolancode.weatherapp.presentation.ui.theme.Gray
 import com.caolancode.weatherapp.presentation.ui.theme.Navy
 import com.caolancode.weatherapp.presentation.ui.theme.RainBlue
 import com.caolancode.weatherapp.presentation.ui.theme.White
@@ -266,6 +269,7 @@ fun Hour(
         )
         Box(
             modifier = Modifier
+                .background(Gray)
                 .height(dimensionResource(id = R.dimen.medium_label_height))
                 .fillMaxWidth(),
             contentAlignment = Alignment.Center
@@ -282,6 +286,7 @@ fun Hour(
         )
         Box(
             modifier = Modifier
+                .background(Gray)
                 .height(dimensionResource(id = R.dimen.small_label_height))
                 .fillMaxWidth(),
             contentAlignment = Alignment.Center
@@ -302,7 +307,9 @@ fun Hour(
             color = Navy
         )
         Column(
-            modifier = Modifier.height(dimensionResource(id = R.dimen.large_label_height))
+            modifier = Modifier
+                .background(Gray)
+                .height(dimensionResource(id = R.dimen.large_label_height))
         ) {
             Box(
                 modifier = Modifier.height(dimensionResource(id = R.dimen.medium_label_height))
@@ -316,7 +323,7 @@ fun Hour(
             thickness = dimensionResource(id = R.dimen.divider_thickness),
             color = Navy
         )
-        TextHourItem(value = "${tempRound}ºC")
+        TextHourItem(value = "${tempRound}ºC", Util.getTempColor(tempRound))
         TextHourItem(value = "${feelsLikeTempRound}ºC")
         Divider(
             thickness = dimensionResource(id = R.dimen.divider_thickness),
@@ -324,6 +331,7 @@ fun Hour(
         )
         Column(
             modifier = Modifier
+                .background(Gray)
                 .height(dimensionResource(id = R.dimen.large_label_height)),
             verticalArrangement = Arrangement.Bottom
         ) {
@@ -359,9 +367,10 @@ fun Hour(
 }
 
 @Composable
-fun TextHourItem(value: String) {
+fun TextHourItem(value: String, color: Color = Gray) {
     Text(
         modifier = Modifier
+            .background(color)
             .height(dimensionResource(id = R.dimen.small_label_height))
             .fillMaxWidth()
             .wrapContentHeight(align = Alignment.CenterVertically),
