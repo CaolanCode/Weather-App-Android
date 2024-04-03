@@ -71,7 +71,7 @@ fun CurrentWeather(weatherViewModel: WeatherViewModel) {
                             contentDescription = stringResource(id = R.string.weather_icon),
                         )
                     }
-                    TitleText(title = condition)
+                    CenterText(title = condition)
                 }
                 Column(
                     modifier = Modifier
@@ -95,7 +95,7 @@ fun CurrentWeather(weatherViewModel: WeatherViewModel) {
                             text = Math.round(temp).toString()
                         )
                     }
-                    TitleText(title = stringResource(id = R.string.current_temp_title))
+                    CenterText(title = stringResource(id = R.string.current_temp_title))
                 }
                 Column(
                     modifier = Modifier.height(150.dp),
@@ -110,8 +110,8 @@ fun CurrentWeather(weatherViewModel: WeatherViewModel) {
                             color = Navy
                         )
                     }
-                    TitleText(title = Math.round(windSpeed).toString())
-                    TitleText(title = stringResource(id = R.string.current_wind_title))
+                    CenterText(title = Math.round(windSpeed).toString())
+                    CenterText(title = stringResource(id = R.string.current_wind_title))
                 }
             }
         }
@@ -134,7 +134,7 @@ fun CurrentWeather(weatherViewModel: WeatherViewModel) {
 }
 
 @Composable
-fun TitleText(title: String) {
+fun CenterText(title: String) {
     Text(
         modifier = Modifier.width(70.dp),
         text = title,

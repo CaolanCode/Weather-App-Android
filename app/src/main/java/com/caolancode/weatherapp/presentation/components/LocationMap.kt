@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -14,8 +15,8 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Marker
-import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
+import com.google.maps.android.compose.rememberMarkerState
 
 @Composable
 fun LocationMap(
@@ -27,8 +28,9 @@ fun LocationMap(
     val longitude by weatherViewModel.longitude.collectAsState()
     val mapHeight = dimensionResource(id = R.dimen.map_height)
     val locationLatLon = LatLng(latitude, longitude)
+    val markerState = rememberMarkerState(position = locationLatLon)
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(locationLatLon, 10f)
+        position = CameraPosition.fromLatLngZoom(markerState.position, 10f)
     }
 
     Box{
@@ -38,8 +40,12 @@ fun LocationMap(
                 .height(mapHeight),
             cameraPositionState = cameraPositionState
         ) {
+            // update marker and camera position because location triggers recomposition
+            // markerState and cameraPositionState do NOT trigger recomposition
+            markerState.position = locationLatLon
+            cameraPositionState.position = CameraPosition.fromLatLngZoom(markerState.position, 10f)
             Marker(
-                state = MarkerState(position = locationLatLon),
+                state = markerState,
                 title = location,
                 snippet = "Marker in $location"
             )

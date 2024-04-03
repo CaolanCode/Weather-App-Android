@@ -99,6 +99,7 @@ class WeatherViewModel: ViewModel() {
         getDayDates()
         setLocation(data.location.name)
         setCurrentCondition()
+        setLatLon(data.location.latitude, data.location.longitude)
     }
 
     private fun setLocation(value: String) {

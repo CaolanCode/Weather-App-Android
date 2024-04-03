@@ -57,11 +57,6 @@ class MainActivity : ComponentActivity() {
 
     }
 
-    override fun onResume() {
-        super.onResume()
-        getCurrentLocation()
-    }
-
     override fun onRestart() {
         super.onRestart()
         getCurrentLocation()
